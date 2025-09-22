@@ -1,10 +1,31 @@
+# write a function if you enter a odd number then function must return Number is event else ODD
+
+# def read_input(prompt):
+#     while True:
+#         try:
+#             return(int(input(prompt)))
+#         except ValueError:
+#             print('Please enter an integer value')
+    
+
+# x = read_input('Enter an integer  :  ')
+
+# def even_odd(n):
+#     if n%2 == 0:
+#         return 'number is EVEN'
+#     else:
+#         return 'number is ODD'
+
+# result = even_odd(7)
+# print(result)
+
 # Currency convertor
 
-def convertor(uds_value):
-    pkr_value = uds_value *300
-    print(pkr_value)
+# def convertor(uds_value):
+#     pkr_value = uds_value *300
+#     print(pkr_value)
 
-convertor(200)
+# convertor(200)
 
 
 # write a function to calculate the factorial which is 1x2x3x4 = 4!
