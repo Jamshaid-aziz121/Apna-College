@@ -1,0 +1,342 @@
+import React from 'react';
+
+// TutorConnect - Single-file React app (mock)
+// This file demonstrates 3 UI alternatives (Marketplace, Live Classroom, Scheduler)
+// Built with Tailwind CSS utility classes (assumes Tailwind is configured in the project)
+// Default export is a small app that lets you switch between the 3 UIs
+
+export default function TutorConnectDemo() {
+  const [view, setView] = React.useState('marketplace');
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <header className="max-w-5xl mx-auto mb-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">TutorConnect — UI & Prototype</h1>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setView('marketplace')}
+              className={`px-3 py-1 rounded-lg ${view==='marketplace' ? 'bg-slate-800 text-white' : 'bg-white border'}`}>
+              Marketplace
+            </button>
+            <button
+              onClick={() => setView('live')}
+              className={`px-3 py-1 rounded-lg ${view==='live' ? 'bg-slate-800 text-white' : 'bg-white border'}`}>
+              Live Classroom
+            </button>
+            <button
+              onClick={() => setView('scheduler')}
+              className={`px-3 py-1 rounded-lg ${view==='scheduler' ? 'bg-slate-800 text-white' : 'bg-white border'}`}>
+              Scheduler
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto">
+        {view === 'marketplace' && <Marketplace />}
+        {view === 'live' && <LiveClassroom />}
+        {view === 'scheduler' && <Scheduler />}
+      </main>
+    </div>
+  );
+}
+
+// --------------------
+// UI Alternative 1: Marketplace (Tutor discovery + Profiles)
+// Key features: Search, filters, tutor cards, quick-book CTA
+
+function Marketplace(){
+  const tutors = [
+    {id:1, name:'Aisha Khan', subject:'Prompt Engineering', rating:4.9, price:20, bio:'Hands-on prompt engineer, 3 yrs experience.'},
+    {id:2, name:'Bilal Ahmed', subject:'React.js', rating:4.7, price:15, bio:'Frontend dev, loves teaching.'},
+    {id:3, name:'Sara Ali', subject:'Data Science', rating:4.8, price:25, bio:'PhD candidate, practical projects.'}
+  ];
+  const [query, setQuery] = React.useState('');
+  const [minRating, setMinRating] = React.useState(4.5);
+
+  const filtered = tutors.filter(t => t.name.toLowerCase().includes(query.toLowerCase()) || t.subject.toLowerCase().includes(query.toLowerCase()))
+    .filter(t => t.rating >= minRating);
+
+  return (
+    <section className="bg-white p-6 rounded-2xl shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex gap-3">
+          <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search tutors or subjects" className="px-3 py-2 border rounded-lg w-80" />
+          <select value={minRating} onChange={e=>setMinRating(Number(e.target.value))} className="px-3 py-2 border rounded-lg">
+            <option value={4}>4+</option>
+            <option value={4.5}>4.5+</option>
+            <option value={4.8}>4.8+</option>
+          </select>
+        </div>
+        <div className="text-sm text-slate-600">{filtered.length} tutors found</div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {filtered.map(t => (
+          <article key={t.id} className="border rounded-xl p-4 bg-gray-50">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-slate-300 flex items-center justify-center">{t.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+              <div>
+                <h3 className="font-medium">{t.name}</h3>
+                <div className="text-xs text-slate-500">{t.subject}</div>
+              </div>
+              <div className="ml-auto text-right">
+                <div className="font-semibold">${t.price}/hr</div>
+                <div className="text-xs text-amber-600">⭐ {t.rating}</div>
+              </div>
+            </div>
+            <p className="mt-3 text-sm text-slate-600">{t.bio}</p>
+            <div className="mt-4 flex gap-2">
+              <button className="px-3 py-1 rounded-lg bg-slate-800 text-white">View Profile</button>
+              <button className="px-3 py-1 rounded-lg border">Message</button>
+              <button className="ml-auto px-3 py-1 rounded-lg bg-emerald-500 text-white">Quick Book</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// --------------------
+// UI Alternative 2: Live Classroom (Video-driven + live chat / notes)
+// Key features: instructor video, low-angle cinematic thumbnail, live chat, pinned notes
+
+function LiveClassroom(){
+  const [chat, setChat] = React.useState([]);
+  const [text, setText] = React.useState('');
+
+  function send(){
+    if(!text.trim()) return;
+    setChat(prev=>[...prev, {id:Date.now(), user:'You', text}]);
+    setText('');
+  }
+
+  return (
+    <section className="bg-white p-6 rounded-2xl shadow-sm">
+      <div className="md:flex gap-6">
+        <div className="md:flex-1">
+          <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white">Video Player (Tutor walking up stairs - low angle)</div>
+          <div className="mt-3 flex items-center gap-3">
+            <img src="https://via.placeholder.com/48" alt="tutor" className="w-12 h-12 rounded-full"/>
+            <div>
+              <div className="font-semibold">Aisha Khan</div>
+              <div className="text-xs text-slate-500">Prompt Engineering • Live Session</div>
+            </div>
+            <div className="ml-auto flex gap-2">
+              <button className="px-3 py-1 border rounded">Follow</button>
+              <button className="px-3 py-1 bg-rose-500 text-white rounded">Join</button>
+            </div>
+          </div>
+
+          <div className="mt-4 p-4 rounded-lg bg-slate-50">
+            <strong>Pinned Notes:</strong>
+            <ol className="list-decimal list-inside text-sm text-slate-600 mt-2">
+              <li>Start with clear intent & role.</li>
+              <li>Use stepwise refinement for complex prompts.</li>
+              <li>Always test and iterate with examples.</li>
+            </ol>
+          </div>
+        </div>
+
+        <aside className="md:w-80 mt-4 md:mt-0">
+          <div className="h-96 border rounded-lg p-3 flex flex-col">
+            <div className="text-sm font-medium mb-2">Live Chat</div>
+            <div className="flex-1 overflow-auto space-y-2">
+              {chat.length===0 && <div className="text-xs text-slate-400">No messages yet. Ask a question!</div>}
+              {chat.map(c=> (
+                <div key={c.id} className="bg-white p-2 rounded shadow-sm text-sm"><strong>{c.user}:</strong> {c.text}</div>
+              ))}
+            </div>
+            <div className="mt-2 flex gap-2">
+              <input value={text} onChange={e=>setText(e.target.value)} placeholder="Type a question..." className="flex-1 px-3 py-2 border rounded" />
+              <button onClick={send} className="px-3 py-2 bg-slate-800 text-white rounded">Send</button>
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <button className="w-full px-3 py-2 border rounded">Download Notes</button>
+            <button className="w-full px-3 py-2 bg-emerald-500 text-white rounded">Ask 1:1</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+// --------------------
+// UI Alternative 3: Scheduler (Booking-first, calendar, availability matching)
+// Key features: Calendar, time-slot booking, confirmation modal
+
+function Scheduler(){
+  const [selected, setSelected] = React.useState(null);
+  const slots = [
+    {id:1, time:'2025-10-01 10:00', tutor:'Aisha Khan', price:20},
+    {id:2, time:'2025-10-01 13:00', tutor:'Aisha Khan', price:20},
+    {id:3, time:'2025-10-02 09:00', tutor:'Bilal Ahmed', price:15}
+  ];
+
+  return (
+    <section className="bg-white p-6 rounded-2xl shadow-sm">
+      <div className="flex gap-4">
+        <div className="w-80">
+          <div className="text-lg font-medium mb-2">Available Slots</div>
+          <ul className="space-y-2">
+            {slots.map(s => (
+              <li key={s.id} className="p-3 border rounded flex items-center gap-3">
+                <div>
+                  <div className="text-sm font-semibold">{new Date(s.time).toLocaleString()}</div>
+                  <div className="text-xs text-slate-500">{s.tutor} • ${s.price}</div>
+                </div>
+                <button onClick={()=>setSelected(s)} className="ml-auto px-3 py-1 bg-emerald-500 text-white rounded">Book</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex-1">
+          <div className="text-lg font-medium mb-2">Booking Preview</div>
+          {!selected && <div className="text-slate-500">Select a slot to book a session.</div>}
+          {selected && (
+            <div className="p-4 border rounded-lg bg-gray-50">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-slate-300 flex items-center justify-center">{selected.tutor.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+                <div>
+                  <div className="font-semibold">{selected.tutor}</div>
+                  <div className="text-xs text-slate-500">{new Date(selected.time).toLocaleString()}</div>
+                </div>
+                <div className="ml-auto font-semibold">${selected.price}</div>
+              </div>
+              <div className="mt-4">
+                <label className="block text-sm">Notes for tutor</label>
+                <textarea className="w-full mt-2 p-2 border rounded" rows={4} placeholder="What would you like to cover?" />
+                <div className="mt-3 flex gap-2">
+                  <button className="px-4 py-2 bg-slate-800 text-white rounded">Confirm & Pay</button>
+                  <button onClick={()=>setSelected(null)} className="px-4 py-2 border rounded">Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/*
+
+Notes & Implementation Guidance (outside the UI code):
+
+1) Missing Context (added in the doc):
+ - Primary users: Tutors (experienced professionals) and Students (learners seeking help).
+ - Platforms: Web-first (responsive), mobile-friendly.
+ - Authentication & roles: Email/SSO auth, role-based dashboard (Tutor vs Student).
+ - Monetization: Commission per booking, subscription for premium features.
+ - Privacy: GDPR-like controls for personal data; optional anonymous reviews.
+
+2) Core APIs (example contract):
+ - GET /api/tutors?query=&rating=&subject=  -> list tutors
+ - GET /api/tutors/:id -> tutor profile + availability
+ - POST /api/bookings -> create booking (returns payment intent)
+ - POST /api/messages -> chat message
+ - GET /api/sessions/:id -> livestream session metadata
+
+3) Real-time features:
+ - Use WebSockets / Pusher / Supabase Realtime for live chat and presence.
+ - Use Twilio / Daily / Jitsi for video sessions (or integrate Veo3 if available via SDK).
+
+4) UX Principles applied across designs:
+ - Clear hierarchy, scannable cards, minimal primary CTAs.
+ - Progressive disclosure: start simple -> reveal advanced filters.
+ - Accessibility: keyboard focus states, proper color contrast, ARIA labels on interactive elements.
+ - Performance: lazy-load thumbnails, paginate tutor list, debounce search input.
+
+5) Next steps to make this production-ready:
+ - Wire up authentication (e.g., NextAuth or Firebase Auth)
+ - Implement real backend endpoints and payment gateway (Stripe)
+ - Add unit & integration tests for critical flows
+ - Add analytics to measure conversion (views -> bookings)
+
+*/
+
+
+
+
+
+
+📱 App Concept: TutorConnect – Home Tuition Finder
+🎯 Purpose
+
+To make it easy for parents/students in Pakistan to find verified tutors for home tuition (academic, skills, Quran, arts, etc.), while tutors can earn flexibly.
+
+🔑 Core Features
+
+For Students/Parents
+
+Search tutors by subject, grade, location, availability, budget
+
+View tutor profiles, ratings, reviews, and experience
+
+Book demo class before confirmation
+
+In-app messaging & call option for coordination
+
+Secure payment system (cash or online)
+
+For Tutors
+
+Profile creation with subjects, qualifications, hourly rates, locations covered
+
+Option to accept/reject tuition requests
+
+Scheduling & calendar management
+
+Earnings dashboard
+
+Admin Panel
+
+Tutor verification (ID, degree check)
+
+Complaint management system
+
+Commission management (e.g., 10% per booking)
+
+⚙️ Workflow
+
+Parent/Student registers → enters class, subject, location, and budget.
+
+System shows tutors nearby with matching criteria.
+
+Student selects tutor → requests a demo or books directly.
+
+Tutor accepts/rejects the request.
+
+Tuition starts → tracked via in-app calendar.
+
+Payment & feedback after session completion.
+
+💡 Advanced Features (Future)
+
+AI tutor recommendation (best match based on student needs).
+
+Subscription packages for parents (monthly tutor hiring).
+
+GPS route tracking (for tutors traveling to student’s home).
+
+Emergency replacement tutor if one cancels.
+
+🛠 Tech Stack Suggestion
+
+Frontend: React Native (cross-platform mobile)
+
+Backend: Node.js with Express
+
+Database: MongoDB / PostgreSQL
+
+Payments: JazzCash, Easypaisa, Stripe (for online)
+
+Location: Google Maps API
+
+👉 Question for you:
+Do you want me to draft a detailed user interface (screens + flow) for this app (like a mini wireframe), or a step-by-step roadmap for development (MVP → full version)?

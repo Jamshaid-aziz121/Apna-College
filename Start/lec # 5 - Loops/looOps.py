@@ -106,11 +106,11 @@
 
 # Q-8 => find the factorial of natural number x
 
-# x = 5
-# fact = 1
-# for i in range(1, x+1):
-#     fact *= i
-# print(f'Factorial of number X is : {fact}')
+x = 5
+fact = 1
+for i in range(1, x+1):
+    fact *= i
+print(f'Factorial of number X is : {fact}')
 
 fact = 1
 x = 5

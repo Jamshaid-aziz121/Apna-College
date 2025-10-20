@@ -1,0 +1,4 @@
+                        lecture # 7
+learning - file i/o
+I m learning Python from the Tutorials of Apna college.
+Today is Tuesday.

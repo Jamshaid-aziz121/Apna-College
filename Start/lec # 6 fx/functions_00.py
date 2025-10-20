@@ -1,3 +1,55 @@
+# write a recursive function to print the all elements in the list
+
+# cities = ['Karachi'] # here index = 0 && len is 1
+cities = ['Karachi','Lahore','Islamabad','Rawalpindu','Peshawar','Mansehra']  
+
+def show_name(city, index=0):
+    if len(city) == 0:
+        return 'No city exist in this list'
+    elif(index == len(cities)):
+        return ' End of cities name'
+    print(city[index])
+
+    return show_name(city, index + 1) # here function is calling itself and also return the results.
+
+result = show_name(cities)
+print(result)
+
+# Write a recursion function calculate the sum of natural numbers till 
+
+# def sum_natural(n):
+#     if(n==0):
+#         return 0
+#     return sum_natural(n-1) + n
+
+# result = sum_natural(5) 
+# print(result)
+
+
+
+# Print Fctorial
+
+# def fact(n):
+#     if(n==0 or n==1):
+#         return 1
+#     else:
+#         return fact(n-1) * n
+
+# result = fact(4)
+# print(result)
+
+
+# Recurion via function
+
+
+# def recursion(n):
+#     if n==0:
+#         return # if we don't write any statement with RETURN then it means we return control/ go out from the function.
+#     print(n)
+#     recursion(n-1)
+
+# recursion(5)
+
 # write a function if you enter a odd number then function must return Number is event else ODD
 
 # def read_input(prompt):
